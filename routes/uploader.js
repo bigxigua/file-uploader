@@ -48,6 +48,8 @@ router.post('/upload/file', upload.single('file'), async (ctx, next) => {
         const tarPathname = path.join(__dirname, '../upload') + `/bunder.tar`;
         const expressPathName = path.join(__dirname, '../upload/');
         await fs.writeFileSync(tarPathname, file.buffer);
+        // TODO 加权限
+        // await execa('chown', ['-R', 'root:root', path.join(expressPathName, './dist')]);
         await execa('tar', ['-xvf', tarPathname, '-C', expressPathName]);
         await execa('rm', ['-rf', tarPathname]);
         ctx.body = serializReuslt('SUCCESS', {});
