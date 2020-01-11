@@ -22,7 +22,7 @@ function asyncFileWriteStreamClose(stream) {
     });
 };
 
-router.post('/api/upload/image', async (ctx, next) => {
+router.post('/upload/image', async (ctx, next) => {
     const { files, body } = ctx.request;
     try {
         const { fileId } = body;
@@ -42,7 +42,7 @@ router.post('/api/upload/image', async (ctx, next) => {
         ctx.body = serializReuslt('SYSTEM_INNER_ERROR', error);
     }
 });
-router.post('/api/upload/file', upload.single('file'), async (ctx, next) => {
+router.post('/upload/file', upload.single('file'), async (ctx, next) => {
     const { file } = ctx.request;
     try {
         const tarPathname = path.join(__dirname, '../upload') + `/bunder.tar`;
