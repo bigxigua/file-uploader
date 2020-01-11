@@ -14,7 +14,8 @@ onerror(app)
 
 // middlewares
 app.use(bodyparser({
-  enableTypes: ['json', 'form', 'text']
+  enableTypes: ['json', 'form', 'text'],
+  multipart: true
 }))
 app.use(json())
 app.use(logger())

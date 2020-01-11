@@ -3,7 +3,11 @@ const { serializReuslt } = require('../util/serializable');
 const fs = require('fs');
 const path = require('path');
 const { hostname, port } = require('../config/server-config');
+const multer = require('@koa/multer');
+const execa = require('execa');
+
 const SERVER_PATH = `${hostname}:${port}/img`;
+const upload = multer();
 // const UPLOAD_IMG_PATH = path.join(process.cwd(), './public/upload/');
 
 function asyncFileWriteStreamClose(stream) {
@@ -37,6 +41,19 @@ router.post('/api/upload/image', async (ctx, next) => {
         console.log('-------上传文件出错--------', error);
         ctx.body = serializReuslt('SYSTEM_INNER_ERROR', error);
     }
-
+});
+router.post('/api/upload/file', upload.single('file'), async (ctx, next) => {
+    const { file } = ctx.request;
+    try {
+        const tarPathname = path.join(__dirname, '../upload') + `/bunder.tar`;
+        const expressPathName = path.join(__dirname, '../upload/');
+        await fs.writeFileSync(tarPathname, file.buffer);
+        await execa('tar', ['-xvf', tarPathname, '-C', expressPathName]);
+        await execa('rm', ['-rf', tarPathname]);
+        ctx.body = serializReuslt('SUCCESS', {});
+    } catch (error) {
+        console.log('----------------', error);
+        ctx.body = serializReuslt('SYSTEM_INNER_ERROR', error);
+    }
 });
 module.exports = router;
