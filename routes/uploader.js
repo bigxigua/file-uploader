@@ -18,9 +18,13 @@ router.post('/upload/image', upload.single('file'), async (ctx, next) => {
         const suffix = file.originalname.split('.').pop() || 'jpg';
         const filePath = `${path.join(__dirname, '../upload/file/images/')}${filename}.${suffix}`;
         await fs.writeFileSync(filePath, file.buffer);
-        ctx.body = serializReuslt('SUCCESS', {
-            path: `${hostname}/file/images/${filename}.${suffix}`
-        });
+        ctx.body = {
+            success: true,
+            file_path: `${hostname}/file/images/${filename}.${suffix}`
+        }
+        // ctx.body = serializReuslt('SUCCESS', {
+        //     path: `${hostname}/file/images/${filename}.${suffix}`
+        // });
     } catch (error) {
         console.log('-------上传文件出错--------', error);
         ctx.body = serializReuslt('SYSTEM_INNER_ERROR', error);
