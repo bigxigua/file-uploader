@@ -1,5 +1,5 @@
 node_modules
-upload/file/image/*
+upload/file/images/*
 package-lock.json
 yarn-lock.json
 .DS_Store
