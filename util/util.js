@@ -46,5 +46,12 @@ module.exports = {
 			'white': '\x1b[37m'
 		};
 		console.log(`${colors[color] || 'white'}${text}`);
+	},
+	delay: async (time = 300) => {
+		return new Promise((resolve) => {
+			setTimeout(() => {
+				resolve();
+			}, time);
+		});
 	}
 }

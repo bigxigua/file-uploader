@@ -1,14 +1,18 @@
 const router = require('koa-router')();
-const { serializReuslt } = require('../util/serializable');
 const fs = require('fs');
 const path = require('path');
-const { hostname, port } = require('../config/server-config');
 const multer = require('@koa/multer');
 const execa = require('execa');
-
+// https://tinypng.com/developers/reference/nodejs
+const tinify = require('tinify');
+const { serializReuslt } = require('../util/serializable');
+const { hostname, tinifyKey } = require('../config/server-config');
+const { delay } = require('../util/util');
 const upload = multer();
 
 // TODO 这两个接口均未鉴权。需要加权限。
+
+tinify.key = tinifyKey;
 
 // 上传图片
 router.post('/upload/image', upload.single('file'), async (ctx, next) => {
@@ -17,14 +21,24 @@ router.post('/upload/image', upload.single('file'), async (ctx, next) => {
         const filename = Date.now().toString();
         const suffix = file.originalname.split('.').pop() || 'jpg';
         const filePath = `${path.join(__dirname, '../upload/file/images/')}${filename}.${suffix}`;
-        await fs.writeFileSync(filePath, file.buffer);
+        let compressedBuffer = file.buffer;
+        let size = Math.ceil(Buffer.byteLength(compressedBuffer, 'utf8') / 1024);
+        try {
+            if (size < 100) {
+                throw 'size is small';
+            }
+            compressedBuffer = await tinify.fromBuffer(file.buffer).toBuffer();
+            size = Math.ceil(Buffer.byteLength(compressedBuffer, 'utf8') / 1024);
+        } catch (error) {
+            console.log('tinyPng 压缩图片出错，走不压缩上传', error);
+        } finally {
+            await fs.writeFileSync(filePath, compressedBuffer);
+        }
         ctx.body = {
             success: true,
+            size,
             file_path: `${hostname}/file/images/${filename}.${suffix}`
         }
-        // ctx.body = serializReuslt('SUCCESS', {
-        //     path: `${hostname}/file/images/${filename}.${suffix}`
-        // });
     } catch (error) {
         console.log('-------上传文件出错--------', error);
         ctx.body = serializReuslt('SYSTEM_INNER_ERROR', error);

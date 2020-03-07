@@ -12,3 +12,5 @@ exports.cookieConfig = {
 exports.hostname = NODE_ENV === 'development' ? 'http://127.0.0.1:3000' : 'https://www.bigxigua.net';
 
 exports.port = 3000;
+
+exports.tinifyKey = 'b48fdMWjzrZ9qhC9J0mGjN2pWhBBrM7k';
