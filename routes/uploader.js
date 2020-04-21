@@ -47,7 +47,8 @@ router.post('/upload/image', upload.single('file'), async (ctx, next) => {
 
 // 前端部署发布
 router.post('/upload/file', upload.single('file'), async (ctx, next) => {
-    const { file } = ctx.request;
+    const { file, body } = ctx.request;
+    const { field } = body;
     try {
         const tarPathname = path.join(__dirname, '../upload') + `/bunder.tar`;
         const expressPathName = path.join(__dirname, '../upload/');
@@ -62,4 +63,5 @@ router.post('/upload/file', upload.single('file'), async (ctx, next) => {
         ctx.body = serializReuslt('SYSTEM_INNER_ERROR', error);
     }
 });
+
 module.exports = router;
