@@ -13,3 +13,5 @@ router.post('/upload/note-server', async (ctx, next) => {
   console.log('pwd:', __dirname);
   console.log('process.cwd():', process.cwd());
 });
+
+module.exports = router;
