@@ -3,7 +3,6 @@ const fs = require('fs');
 const path = require('path');
 const multer = require('@koa/multer');
 const execa = require('execa');
-// https://tinypng.com/developers/reference/nodejs
 const tinify = require('tinify');
 const { serializReuslt } = require('../util/serializable');
 const { hostname, tinifyKey } = require('../config/server-config');
@@ -14,7 +13,8 @@ const upload = multer();
 
 tinify.key = tinifyKey;
 
-// 上传图片
+// https://tinypng.com/developers/reference/nodejs
+// 上传图片并接入了tinyPng压缩技术
 router.post('/upload/image', upload.single('file'), async (ctx, next) => {
     const { file } = ctx.request;
     try {
@@ -24,9 +24,9 @@ router.post('/upload/image', upload.single('file'), async (ctx, next) => {
         let compressedBuffer = file.buffer;
         let size = Math.ceil(Buffer.byteLength(compressedBuffer, 'utf8') / 1024);
         try {
-            if (size < 100) {
-                throw 'size is small';
-            }
+            // if (size < 100) {
+            //     throw 'size is small';
+            // }
             compressedBuffer = await tinify.fromBuffer(file.buffer).toBuffer();
             size = Math.ceil(Buffer.byteLength(compressedBuffer, 'utf8') / 1024);
         } catch (error) {
@@ -47,8 +47,7 @@ router.post('/upload/image', upload.single('file'), async (ctx, next) => {
 
 // 前端部署发布
 router.post('/upload/file', upload.single('file'), async (ctx, next) => {
-    const { file, body } = ctx.request;
-    const { field } = body;
+    const { file } = ctx.request;
     try {
         const tarPathname = path.join(__dirname, '../upload') + `/bunder.tar`;
         const expressPathName = path.join(__dirname, '../upload/');
