@@ -9,7 +9,6 @@ const cors = require('koa-cors');
 
 // 上传图片
 const uploader = require('./routes/uploader');
-const noteServer = require('./routes/note-server');
 
 // error handler
 onerror(app)
@@ -44,7 +43,6 @@ app.use(async (ctx, next) => {
 
 // routes
 app.use(uploader.routes(), uploader.allowedMethods());
-app.use(noteServer.routes(), noteServer.allowedMethods());
 
 // error-handling
 app.on('error', (err, ctx) => {
