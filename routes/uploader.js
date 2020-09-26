@@ -29,7 +29,7 @@ router.post('/upload/image', upload.single('file'), async (ctx, next) => {
         let size = Math.ceil(Buffer.byteLength(compressedBuffer, 'utf8') / 1024);
         try {
             // 本地打开或参数开启不压缩则不压缩图片
-            if (!isDevelopment || !noCompress) {
+            if (!isDevelopment && !noCompress) {
                 compressedBuffer = await tinify.fromBuffer(file.buffer).toBuffer();
                 size = Math.ceil(Buffer.byteLength(compressedBuffer, 'utf8') / 1024);
             }
