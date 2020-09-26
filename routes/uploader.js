@@ -9,6 +9,8 @@ const { hostname, tinifyKey } = require('../config/server-config');
 const { delay } = require('../util/util');
 const upload = multer();
 
+const isDevelopment = process.env.env === 'development';
+
 // TODO 这两个接口均未鉴权。需要加权限。
 
 tinify.key = tinifyKey;
@@ -16,19 +18,20 @@ tinify.key = tinifyKey;
 // https://tinypng.com/developers/reference/nodejs
 // 上传图片并接入了tinyPng压缩技术
 router.post('/upload/image', upload.single('file'), async (ctx, next) => {
-    const { file } = ctx.request;
+    const { file, body } = ctx.request;
     try {
+        const { noCompress = false } = body;
         const filename = Date.now().toString();
         const suffix = file.originalname.split('.').pop() || 'jpg';
         const filePath = `${path.join(__dirname, '../upload/file/images/')}${filename}.${suffix}`;
         let compressedBuffer = file.buffer;
         let size = Math.ceil(Buffer.byteLength(compressedBuffer, 'utf8') / 1024);
         try {
-            // if (size < 100) {
-            //     throw 'size is small';
-            // }
-            compressedBuffer = await tinify.fromBuffer(file.buffer).toBuffer();
-            size = Math.ceil(Buffer.byteLength(compressedBuffer, 'utf8') / 1024);
+            // 本地打开或参数开启不压缩则不压缩图片
+            if (!isDevelopment || !noCompress) {
+                compressedBuffer = await tinify.fromBuffer(file.buffer).toBuffer();
+                size = Math.ceil(Buffer.byteLength(compressedBuffer, 'utf8') / 1024);
+            }
         } catch (error) {
             console.log('tinyPng 压缩图片出错，走不压缩上传', error);
         } finally {
