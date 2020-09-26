@@ -21,6 +21,7 @@ router.post('/upload/image', upload.single('file'), async (ctx, next) => {
     const { file, body } = ctx.request;
     try {
         const { noCompress = false } = body;
+        console.log('---------noCompress----------', noCompress);
         const filename = Date.now().toString();
         const suffix = file.originalname.split('.').pop() || 'jpg';
         const filePath = `${path.join(__dirname, '../upload/file/images/')}${filename}.${suffix}`;
