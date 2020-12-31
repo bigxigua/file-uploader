@@ -1,5 +1,6 @@
 const NODE_ENV = process.env.env;
-const domain = NODE_ENV === 'development' ? '127.0.0.1' : 'www.bigxigua.net';
+// const domain = NODE_ENV === 'development' ? '127.0.0.1' : 'www.bigxigua.net';
+const domain = NODE_ENV === 'development' ? '127.0.0.1' : 'api.qingpine.com';
 exports.cookieConfig = {
     domain,
     signed: true,
@@ -9,7 +10,8 @@ exports.cookieConfig = {
     overwrite: false
 };
 
-exports.hostname = NODE_ENV === 'development' ? 'http://127.0.0.1:3000' : 'https://www.bigxigua.net';
+// exports.hostname = NODE_ENV === 'development' ? 'http://127.0.0.1:3000' : 'https://www.bigxigua.net';
+exports.hostname = NODE_ENV === 'development' ? 'http://127.0.0.1:3000' : 'https://api.qingpine.com';
 
 exports.port = 3000;
 

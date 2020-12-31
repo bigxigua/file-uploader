@@ -8,7 +8,8 @@ const fs = require('fs');
 const path = require('path');
 const request = require('request');
 
-const SERVICE_PATH = 'https://www.bigxigua.net/upload/file';
+const SERVICE_PATH = 'https://api.qingpine.com/upload/file';
+// const SERVICE_PATH = 'https://www.bigxigua.net/upload/file';
 // const SERVICE_PATH = 'http://127.0.0.1:3000/upload/file';
 
 async function upload(filePath) {
