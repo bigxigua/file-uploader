@@ -17,7 +17,8 @@ tinify.key = tinifyKey;
 
 // https://tinypng.com/developers/reference/nodejs
 // 上传图片并接入了tinyPng压缩技术
-router.post('/upload/image', upload.single('file'), async (ctx, next) => {
+// TODO改为upload
+router.post('/qxupload/image', upload.single('file'), async (ctx, next) => {
     const { file, body } = ctx.request;
     try {
         const { noCompress = false } = body;
@@ -49,8 +50,8 @@ router.post('/upload/image', upload.single('file'), async (ctx, next) => {
     }
 });
 
-// 前端部署发布
-router.post('/upload/file', upload.single('file'), async (ctx, next) => {
+// 前端部署发布 TODO改为upload
+router.post('/qxupload/file', upload.single('file'), async (ctx, next) => {
     const { file } = ctx.request;
     try {
         const tarPathname = path.join(__dirname, '../upload') + `/bunder.tar`;
