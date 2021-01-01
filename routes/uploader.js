@@ -43,7 +43,7 @@ router.post('/qxupload/image', upload.single('file'), async (ctx, next) => {
             success: true,
             size,
             // file_path: `${hostname}/file/images/${filename}.${suffix}` // bigxigua
-            file_path: `${hostname}/file/images/${filename}.${suffix}`
+            file_path: `${hostname}/images/${filename}.${suffix}`
         }
     } catch (error) {
         console.log('-------上传文件出错--------', error);
