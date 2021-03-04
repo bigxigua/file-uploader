@@ -18,6 +18,7 @@
     "@koa/multer": "^2.0.2",
     "debug": "^2.6.3",
     "execa": "^4.0.0",
+    "ffmpeg-extract-frames": "^2.0.2",
     "koa": "^2.2.0",
     "koa-bodyparser": "^3.2.0",
     "koa-convert": "^1.2.0",

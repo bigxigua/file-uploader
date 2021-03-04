@@ -1,5 +1,6 @@
 const router = require('koa-router')();
 const fs = require('fs');
+const extractFrames = require('ffmpeg-extract-frames');
 const path = require('path');
 const multer = require('@koa/multer');
 const execa = require('execa');
@@ -20,16 +21,17 @@ tinify.key = tinifyKey;
 router.post('/upload/image', upload.single('file'), async (ctx, next) => {
     const { file, body } = ctx.request;
     try {
-        const { noCompress = false } = body;
-        console.log('---------noCompress----------', noCompress);
+        const { noCompress = false, isVideo = '' } = body;
+        console.log('---------body----------', JSON.stringify(body));
         const filename = Date.now().toString();
         const suffix = file.originalname.split('.').pop() || 'jpg';
         const filePath = `${path.join(__dirname, '../upload/file/images/')}${filename}.${suffix}`;
         let compressedBuffer = file.buffer;
         let size = Math.ceil(Buffer.byteLength(compressedBuffer, 'utf8') / 1024);
+        let thumb = '';
         try {
             // 本地打开或参数开启不压缩则不压缩图片
-            if (!isDevelopment && !noCompress) {
+            if (!isDevelopment && !noCompress && isVideo !== 'Y') {
                 compressedBuffer = await tinify.fromBuffer(file.buffer).toBuffer();
                 size = Math.ceil(Buffer.byteLength(compressedBuffer, 'utf8') / 1024);
             }
@@ -37,11 +39,28 @@ router.post('/upload/image', upload.single('file'), async (ctx, next) => {
             console.log('tinyPng 压缩图片出错，走不压缩上传', error);
         } finally {
             await fs.writeFileSync(filePath, compressedBuffer);
+            if (isVideo === 'Y') {
+                try {
+                    const res = await extractFrames({
+                        input: filePath,
+                        output: `${path.join(__dirname, '../upload/file/images/')}${filename}-snapshot.png`,
+                        offsets: [10]
+                    });
+                    // bigxigua `${hostname}/file/images/${filename}-snapshot.png`
+                    // yunzizai `${hostname}/images/${filename}-snapshot.png`
+                    thumb = `${hostname}/images/${filename}-snapshot.png`
+                } catch (error) {
+                    console.log('[生成视频截图失败]', error);
+                }
+            }
         }
         ctx.body = {
             success: true,
             size,
-            file_path: `${hostname}/file/images/${filename}.${suffix}` // bigxigua
+            thumb,
+            // bigxigua `${hostname}/file/images/${filename}.${suffix}` 
+            // yunzizai `${hostname}/images/${filename}.${suffix}`
+            file_path: `${hostname}/images/${filename}.${suffix}`
         }
     } catch (error) {
         console.log('-------上传文件出错--------', error);
