@@ -18,7 +18,9 @@ tinify.key = tinifyKey;
 
 // https://tinypng.com/developers/reference/nodejs
 // 上传图片并接入了tinyPng压缩技术
-router.post('/upload/image', upload.single('file'), async (ctx, next) => {
+// bigxigua `/upload/image`
+// yunzizai `/upload/image`
+router.post('/qxupload/image', upload.single('file'), async (ctx, next) => {
     const { file, body } = ctx.request;
     try {
         const { noCompress = false, isVideo = '' } = body;
