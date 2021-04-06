@@ -18,9 +18,8 @@ tinify.key = tinifyKey;
 
 // https://tinypng.com/developers/reference/nodejs
 // 上传图片并接入了tinyPng压缩技术
-// bigxigua `/upload/image`
 // yunzizai `/upload/image`
-router.post('/qxupload/image', upload.single('file'), async (ctx, next) => {
+router.post('/upload/image', upload.single('file'), async (ctx, next) => {
     const { file, body } = ctx.request;
     try {
         const { noCompress = false, isVideo = '' } = body;
@@ -48,9 +47,8 @@ router.post('/qxupload/image', upload.single('file'), async (ctx, next) => {
                         output: `${path.join(__dirname, '../upload/file/images/')}${filename}-snapshot.png`,
                         offsets: [10]
                     });
-                    // bigxigua `${hostname}/file/images/${filename}-snapshot.png`
                     // yunzizai `${hostname}/images/${filename}-snapshot.png`
-                    thumb = `${hostname}/images/${filename}-snapshot.png`
+                    thumb = `${hostname}/file/images/${filename}-snapshot.png`;
                 } catch (error) {
                     console.log('[生成视频截图失败]', error);
                 }
@@ -60,9 +58,8 @@ router.post('/qxupload/image', upload.single('file'), async (ctx, next) => {
             success: true,
             size,
             thumb,
-            // bigxigua `${hostname}/file/images/${filename}.${suffix}` 
             // yunzizai `${hostname}/images/${filename}.${suffix}`
-            file_path: `${hostname}/images/${filename}.${suffix}`
+            file_path: `${hostname}/file/images/${filename}.${suffix}`
         }
     } catch (error) {
         console.log('-------上传文件出错--------', error);
