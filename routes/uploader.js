@@ -18,7 +18,6 @@ tinify.key = tinifyKey;
 
 // https://tinypng.com/developers/reference/nodejs
 // 上传图片并接入了tinyPng压缩技术
-// yunzizai `/upload/image`
 router.post('/upload/image', upload.single('file'), async (ctx, next) => {
     const { file, body } = ctx.request;
     try {
@@ -47,8 +46,7 @@ router.post('/upload/image', upload.single('file'), async (ctx, next) => {
                         output: `${path.join(__dirname, '../upload/file/images/')}${filename}-snapshot.png`,
                         offsets: [10]
                     });
-                    // yunzizai `${hostname}/images/${filename}-snapshot.png`
-                    thumb = `${hostname}/file/images/${filename}-snapshot.png`;
+                    thumb = `${hostname}/file/images/${filename}-snapshot.png`
                 } catch (error) {
                     console.log('[生成视频截图失败]', error);
                 }
@@ -58,7 +56,6 @@ router.post('/upload/image', upload.single('file'), async (ctx, next) => {
             success: true,
             size,
             thumb,
-            // yunzizai `${hostname}/images/${filename}.${suffix}`
             file_path: `${hostname}/file/images/${filename}.${suffix}`
         }
     } catch (error) {
