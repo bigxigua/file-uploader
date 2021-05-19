@@ -1,6 +1,20 @@
+const os = require('os');
+function getIPAdress() {
+    var interfaces = os.networkInterfaces();
+    for (var devName in interfaces) {
+        var iface = interfaces[devName];
+        for (var i = 0; i < iface.length; i++) {
+            var alias = iface[i];
+            if (alias.family === 'IPv4' && alias.address !== '127.0.0.1' && !alias.internal) {
+                return alias.address;
+            }
+        }
+    }
+}
+const ip = getIPAdress();
+
 const NODE_ENV = process.env.env;
-// const domain = NODE_ENV === 'development' ? '127.0.0.1' : 'www.bigxigua.net';
-const domain = NODE_ENV === 'development' ? '192.168.0.108' : 'api.qingpine.com';
+const domain = NODE_ENV === 'development' ? ip : 'api.qingpine.com';
 exports.cookieConfig = {
     domain,
     signed: true,
@@ -10,8 +24,7 @@ exports.cookieConfig = {
     overwrite: false
 };
 
-// exports.hostname = NODE_ENV === 'development' ? 'http://127.0.0.1:3000' : 'https://www.bigxigua.net';
-exports.hostname = NODE_ENV === 'development' ? 'http://192.168.0.108:3000' : 'https://api.qingpine.com';
+exports.hostname = NODE_ENV === 'development' ? `http://${ip}:3000` : 'https://api.qingpine.com';
 
 exports.port = 3000;
 
